@@ -1,4 +1,8 @@
 import streamlit as st
+from connection.connection import encontrarInvestigadores,encontrarInvestigador, crearInvestigador,asociarProyectoInvestigador,encontrarProyectos,encontrarProyecto,crearProyecto
+import pandas as pd
+import numpy as np
+
 ## Seleccion de pagina en sidebar de streamlit
 pagina = st.sidebar.radio("Pagina deseada:", ["Inicio", "Consultas","Carga de datos","Mantenimientos","Asociciones"])
 
@@ -39,8 +43,16 @@ if pagina == "Consultas":
     if consulta == consultasDisponibles[2]:
         st.dataframe(data)
     if consulta == consultasDisponibles[3]:
-        st.dataframe(data)
+        lista = encontrarInvestigadores().to_numpy().tolist()[1:]
+        opcion = st.selectbox("Seleccione el investigador", [elem[0] for elem in lista])
+        st.dataframe(encontrarInvestigador(opcion))
+        
+        
     if consulta == consultasDisponibles[4]:
+        proyectos = encontrarProyectos().to_numpy().tolist()
+        opcion = st.selectbox("Seleccione el Proyecto a consultar", [elem[0] for elem in proyectos])
+        st.dataframe(encontrarProyecto(opcion))
+
         st.dataframe(data)
     if consulta == consultasDisponibles[5]:
         st.dataframe(data)
@@ -62,17 +74,21 @@ if pagina == "Mantenimientos":
         mantenimientos = st.selectbox("Opciones Disponibles: ",opcionesDisponibles)
         ##Selccion de los mantenimientos de los investigadores
         if mantenimientos == opcionesDisponibles[0]: 
+            idInvestigador =  float(encontrarInvestigadores().to_numpy().tolist()[-1][0]+1)
             nombreInvestigador = st.text_input("Ingrese el nombre del investigador: ")
-            apellidoInvestigador = st.text_input("Ingrese el apellido del investigador: ")
             correoInvestigador = st.text_input("Ingrese el correo del investigador: ")
             tituloAcademico = st.selectbox("Seleccione el titulo academico",["Tecnico","Bachiller","Licenciado","Master","Doctor"])
             institucion = st.text_input("Ingrese la institucion del Investigador")
             insertar = st.button("Insertar Investigador")
             if insertar:
-                pass
+                sumary = crearInvestigador(idInvestigador,nombreInvestigador,tituloAcademico,institucion,correoInvestigador)
+                st.subheader("Insertado con exito!")
+                st.dataframe(encontrarInvestigador(idInvestigador))
+
         if mantenimientos == opcionesDisponibles[1]:
-            investigadores = []
-            investigadorSeleccionado = st.selectbox("Seleccione el Investigador que desea modificar",investigadores)
+            investigadores = encontrarInvestigadores().to_numpy().tolist()[1:]
+            opcion = st.selectbox("Seleccione el investigador que desea modificar", [elem[0] for elem in investigadores])
+            st.dataframe(encontrarInvestigador(opcion))
             nombreInvestigador = st.text_input("Ingrese el nuevo nombre del investigador: ")
             apellidoInvestigador = st.text_input("Ingrese el nuevo apellido del investigador: ")
             correoInvestigador = st.text_input("Ingrese el nuevo correo del investigador: ")
@@ -88,17 +104,21 @@ if pagina == "Mantenimientos":
         mantenimientos = st.selectbox("Opciones Disponibles: ",opcionesDisponibles)
         ##Selccion de los mantenimientos de los proyectos
         if mantenimientos == opcionesDisponibles[0]:
+            idProyecto = encontrarProyectos().to_numpy().tolist()[-1][0] +1
             nombreProyecto = st.text_input("Ingrese el nombre del proyecto: ")
             yearInicio = st.selectbox("Ingrese el año de inicio del proyecto ",range(1890,2025))
             areaConocimiento = st.text_input("Ingrese el area de conocimiento del proyecto: ")
-            institucion = st.number_input("Ingrese la duracion en meses del proyecto: ",1)
+            duracion = st.number_input("Ingrese la duracion en meses del proyecto: ",1)
             insertar = st.button("Insertar Proyecto")
             if insertar:
-                pass
+                crearProyecto(idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion)
+                st.subheader("Insertado con exito!")
+                st.dataframe(encontrarInvestigador(idProyecto))
         
         if mantenimientos == opcionesDisponibles[1]:
-            proyectos = []
-            proyectoSeleccionado = st.selectbox("Seleccione el Proyecto que desea modificar",proyectos)
+            proyectos =  encontrarProyectos().to_numpy().tolist()
+            proyectoSeleccionado = st.selectbox("Seleccione el Proyecto que desea modificar",[elem[0] for elem in proyectos ])
+            st.dataframe(encontrarProyecto(proyectoSeleccionado))
             nombreProyecto = st.text_input("Ingrese el nuevo nombre del proyecto: ")
             yearInicio = st.selectbox("Ingrese el año de inicio del proyecto ",range(1890,2025))
             areaConocimiento = st.text_input("Ingrese el nuevo area de conocimiento del proyecto: ")
@@ -147,13 +167,16 @@ if pagina == "Asociciones":
     asocacionesD = ["Asociacion Proyecto-Investigador", "Asociacion Proyecto-Publicacion"]
     asociacionesDisponibles = st.selectbox("Asociaciones Disponibles",asocacionesD)
     if asociacionesDisponibles == asocacionesD[0]:
-        investigadores = []
-        investigadorSeleccionado = st.selectbox("Seleccione el Investigador que desea Asociar",investigadores)
-        proyectos = []
-        proyectoSeleccionado = st.selectbox("Seleccione el Proyecto que desea Asociar",proyectos)
+        investigadores = encontrarInvestigadores().to_numpy().tolist()[1:]
+        opcion = st.selectbox("Seleccione el Investigador que desea Asociar", [elem[0] for elem in investigadores])
+        st.dataframe(encontrarInvestigador(opcion))
+
+        proyectos = encontrarProyectos().to_numpy().tolist()[1:]
+        proyecto = st.selectbox("Seleccione el Proyecto que desea Asociar", [elem[0] for elem in proyectos])
+        st.dataframe(encontrarProyecto(proyecto))
         insertar = st.button("Asociar")
         if insertar:
-            pass
+            asociarProyectoInvestigador(investigadorSeleccionado,proyectoSeleccionado)
     if asociacionesDisponibles == asocacionesD[1]:
         proyectos = []
         proyectoSeleccionado = st.selectbox("Seleccione el Proyecto que desea Asociar",proyectos)
