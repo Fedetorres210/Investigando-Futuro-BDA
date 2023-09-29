@@ -1,6 +1,27 @@
 from neo4j import GraphDatabase
 ## Imports de todas las funciones de consults.py
-from connection.requests.consults import crear_investigador,modificar_investigador, encontrar_investigador, encontrar_investigadores, asociar_proyecto_investigador,encontrar_proyecto,encontrar_proyectos,crear_proyecto,modificar_proyecto,modificar_publicacion, crear_publicacion, encontrar_publicacion, encontrar_publicaciones,asociar_proyecto_publicacion,encontrar_asociaciones_publicaciones,encontrar_investigador_relacionado,definir_proyectos_relacionados_publicaciones,encontrar_proyecto_relacionado
+from connection.requests.consults import (crear_investigador,
+                                          modificar_investigador, 
+                                          encontrar_investigador, 
+                                          encontrar_investigadores, 
+                                          asociar_proyecto_investigador,
+                                          encontrar_proyecto,encontrar_proyectos,
+                                          crear_proyecto,
+                                          modificar_proyecto,
+                                          modificar_publicacion, 
+                                          crear_publicacion, 
+                                          encontrar_publicacion, 
+                                          encontrar_publicaciones,
+                                          asociar_proyecto_publicacion,
+                                          encontrar_asociaciones_publicaciones,
+                                          encontrar_investigador_relacionado,
+                                          definir_proyectos_relacionados_publicaciones,
+                                          encontrar_proyecto_relacionado,
+                                          cargar_investigadores_desde_csv,
+                                          cargar_proyectos_desde_csv,
+                                          cargar_publicaciones_desde_csv,
+                                          crear_relaciones_publicaciones_proyectos,
+                                          crear_relaciones_investigadores_proyectos)
 ## import de variables relativa, relacionadas a un .env 
 import os
 from dotenv import load_dotenv
@@ -100,3 +121,19 @@ def encontrarProyectoRelacionado(id):
 
 def definirProyectosRelacionadosPublicaciones(id):
     return definir_proyectos_relacionados_publicaciones(driver,id)
+
+
+def cargarArchivoInvestigadorCSV(csv_file_path):
+    cargar_investigadores_desde_csv(driver, csv_file_path);
+
+def cargarArchivoProyectosCSV(csv_file_path):
+    cargar_proyectos_desde_csv(driver, csv_file_path);
+
+def cargarArchivoPublicacionesCSV(csv_file_path):
+    cargar_publicaciones_desde_csv(driver, csv_file_path);
+
+def cargarArchivoRelacionesPublicacionYProyectoCSV(csv_file_path):
+    crear_relaciones_publicaciones_proyectos(driver, csv_file_path);
+
+def cargarArchivoRelacionesInvestigadorYProyectoCSV(csv_file_path):
+    crear_relaciones_investigadores_proyectos(driver, csv_file_path);

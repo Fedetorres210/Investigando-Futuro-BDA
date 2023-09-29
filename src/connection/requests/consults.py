@@ -68,7 +68,7 @@ def encontrar_investigador(driver, id):
     # 
 
 def encontrar_investigador_relacionado(driver,idInvestigador):
-    result = driver.execute_query("MATCH (i:Investigador {id:$idInvestigador})-[:PARTICIPA_EN]->(p:Proyecto) RETURN p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.año_inicio",idInvestigador = idInvestigador, result_transformer_= neo4j.Result.to_df) 
+    result = driver.execute_query("MATCH (i:Investigador {id:$idInvestigador})-[:PARTICIPA_EN]->(p:Proyecto) RETURN p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.anno_inicio",idInvestigador = idInvestigador, result_transformer_= neo4j.Result.to_df) 
     return result;
 
 
@@ -113,7 +113,7 @@ def asociar_proyecto_investigador(driver,idInvestigador,idProyecto):
     # 
 
 def encontrar_proyecto(driver, id):
-    result = driver.execute_query("MATCH (p:Proyecto {id:$id}) RETURN  p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.año_inicio",id = id, result_transformer_= neo4j.Result.to_df) 
+    result = driver.execute_query("MATCH (p:Proyecto {id:$id}) RETURN  p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.anno_inicio",id = id, result_transformer_= neo4j.Result.to_df) 
     return result;
 
 
@@ -128,7 +128,7 @@ def encontrar_proyecto(driver, id):
 
 
 def encontrar_proyectos(driver):
-    records = driver.execute_query("MATCH (p:Proyecto) return p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.año_inicio",result_transformer_= neo4j.Result.to_df)
+    records = driver.execute_query("MATCH (p:Proyecto) return p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.anno_inicio",result_transformer_= neo4j.Result.to_df)
     return records;
 
 
@@ -148,7 +148,7 @@ def encontrar_proyectos(driver):
 # return sumary resumen de la respuesta de la base de datos de grafos
 
 def crear_proyecto(driver,idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion):
-    sumary = driver.execute_query("CREATE (p:Proyecto {id:$idProyecto,titulo: $nombre, año_inicio: $yearInicio, area_conocimiento: $areaConocimiento, duracion_meses: $duracion})", idProyecto=idProyecto ,nombre=nombreProyecto , yearInicio=yearInicio , areaConocimiento=areaConocimiento , duracion = duracion)
+    sumary = driver.execute_query("CREATE (p:Proyecto {id:$idProyecto,titulo: $nombre, anno_inicio: $yearInicio, area_conocimiento: $areaConocimiento, duracion_meses: $duracion})", idProyecto=idProyecto ,nombre=nombreProyecto , yearInicio=yearInicio , areaConocimiento=areaConocimiento , duracion = duracion)
     return sumary
 
 #  modificar un proyecto en la base de datos con base en su id
@@ -170,7 +170,7 @@ def crear_proyecto(driver,idProyecto,nombreProyecto,yearInicio,areaConocimiento,
 
 
 def modificar_proyecto(driver,idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion):
-    results = driver.execute_query("MATCH (p:Proyecto {id:$idProyecto}) SET p = {id:$idProyecto,titulo: $nombre, año_inicio: $yearInicio, area_conocimiento: $areaConocimiento, duracion_meses: $duracion} RETURN p", idProyecto=idProyecto ,nombre=nombreProyecto , yearInicio=yearInicio , areaConocimiento=areaConocimiento , duracion = duracion)
+    results = driver.execute_query("MATCH (p:Proyecto {id:$idProyecto}) SET p = {id:$idProyecto,titulo: $nombre, anno_inicio: $yearInicio, area_conocimiento: $areaConocimiento, duracion_meses: $duracion} RETURN p", idProyecto=idProyecto ,nombre=nombreProyecto , yearInicio=yearInicio , areaConocimiento=areaConocimiento , duracion = duracion)
     return results
 
 
@@ -209,7 +209,7 @@ def encontrar_proyecto_relacionado(driver,id):
     # 
 
 def modificar_publicacion(driver,id,titulo,año_publicacion,revista):
-    results = driver.execute_query("MATCH (p:Publicacion {id:$id}) SET p = {id:$id,titulo: $titulo, año_publicacion: $año_publicacion, revista: $revista} RETURN p.id,p.titulo,p.año_publicacion,p.revista", id=id ,titulo=titulo , año_publicacion=año_publicacion , revista=revista)
+    results = driver.execute_query("MATCH (p:Publicacion {idPub:$id}) SET p = {idPub:$id,titulo: $titulo, anno_publicacion: $año_publicacion, revista: $revista} RETURN p.id,p.titulo,p.año_publicacion,p.revista", id=id ,titulo=titulo , año_publicacion=año_publicacion , revista=revista)
     return results
 
 
@@ -222,7 +222,7 @@ def modificar_publicacion(driver,id,titulo,año_publicacion,revista):
     # return: pandas dataframe de los datos la publicacion
 
 def encontrar_publicacion(driver, id):
-    result = driver.execute_query("MATCH (p:Publicacion {id:$id}) RETURN  p.id,p.titulo,p.año_publicacion,p.revista",id = id, result_transformer_= neo4j.Result.to_df) 
+    result = driver.execute_query("MATCH (p:Publicacion {idPub:$id}) RETURN  p.idPub,p.titulo,p.anno_publicacion,p.revista",id = id, result_transformer_= neo4j.Result.to_df) 
     return result;
 
 
@@ -235,7 +235,7 @@ def encontrar_publicacion(driver, id):
     # 
 
 def encontrar_publicaciones(driver):
-    records = driver.execute_query("MATCH (p:Publicacion) return p.id,p.titulo,p.año_publicacion,p.revista",result_transformer_= neo4j.Result.to_df)
+    records = driver.execute_query("MATCH (p:Publicacion) return p.idPub,p.titulo,p.anno_publicacion,p.revista",result_transformer_= neo4j.Result.to_df)
     return records;
 
 #  Crear una publicacion en la base de datos 
@@ -257,7 +257,7 @@ def encontrar_publicaciones(driver):
 
 
 def crear_publicacion(driver,id,titulo,año_publicacion,revista):
-    sumary = driver.execute_query("CREATE (p:Publicacion {id:$id,titulo: $titulo, año_publicacion: $año_publicacion, revista: $revista})", id=id ,titulo=titulo , año_publicacion=año_publicacion , revista=revista)
+    sumary = driver.execute_query("CREATE (p:Publicacion {idPub:$id,titulo: $titulo, anno_publicacion: $año_publicacion, revista: $revista})", id=id ,titulo=titulo , año_publicacion=año_publicacion , revista=revista)
     return sumary
 
 
@@ -276,7 +276,7 @@ def crear_publicacion(driver,id,titulo,año_publicacion,revista):
 
 
 def asociar_proyecto_publicacion(driver,idProyecto,idPublicacion):
-    return driver.execute_query("MATCH (proyecto:Proyecto {id:$idProyecto}) MATCH(publicacion:Publicacion {id:$idPublicacion}) CREATE (proyecto)-[:GENERA]->(publicacion) RETURN publicacion.id,publicacion.titulo,publicacion.año_publicacion,publicacion.revista,proyecto.id, proyecto.titulo,proyecto.area_conocimiento,proyecto.duracion_meses,proyecto.año_inicio ",idProyecto=idProyecto,idPublicacion=idPublicacion,result_transformer_= neo4j.Result.to_df)
+    return driver.execute_query("MATCH (proyecto:Proyecto {id:$idProyecto}) MATCH(publicacion:Publicacion {idPub:$idPublicacion}) CREATE (proyecto)-[:GENERA]->(publicacion) RETURN publicacion.idPub,publicacion.titulo,publicacion.anno_publicacion,publicacion.revista,proyecto.id, proyecto.titulo,proyecto.area_conocimiento,proyecto.duracion_meses,proyecto.anno_inicio ",idProyecto=idProyecto,idPublicacion=idPublicacion,result_transformer_= neo4j.Result.to_df)
 
 
 
@@ -296,7 +296,7 @@ def asociar_proyecto_publicacion(driver,idProyecto,idPublicacion):
 
 def encontrar_asociaciones_publicaciones(driver):
     publicacionesTotales = encontrar_publicaciones(driver)
-    publicacionesRelacionadas = driver.execute_query("MATCH (proyecto:Proyecto)-[:GENERA]->(publicacion:Publicacion)  RETURN publicacion.id,publicacion.titulo,publicacion.año_publicacion,publicacion.revista ",result_transformer_= neo4j.Result.to_df)
+    publicacionesRelacionadas = driver.execute_query("MATCH (proyecto:Proyecto)-[:GENERA]->(publicacion:Publicacion)  RETURN publicacion.idPub,publicacion.titulo,publicacion.anno_publicacion,publicacion.revista ",result_transformer_= neo4j.Result.to_df)
     publicacionesSinRelacionar = []
     for elem in publicacionesTotales.to_numpy().tolist():
         index = 0
@@ -322,4 +322,70 @@ def encontrar_asociaciones_publicaciones(driver):
 #
 
 def definir_proyectos_relacionados_publicaciones(driver,id):
-    return  driver.execute_query("MATCH (publicacion:Publicacion{id:$id})<-[:GENERA]-(p:Proyecto)  RETURN p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.año_inicio ",id=id,result_transformer_= neo4j.Result.to_df)
+    return  driver.execute_query("MATCH (publicacion:Publicacion{idPub:$id})<-[:GENERA]-(p:Proyecto)  RETURN p.id, p.titulo,p.area_conocimiento,p.duracion_meses,p.anno_inicio ",id=id,result_transformer_= neo4j.Result.to_df)
+
+
+
+def cargar_investigadores_desde_csv(driver, csv_file_path):
+    query = f"""
+    LOAD CSV WITH HEADERS FROM 'file:///{csv_file_path}' AS row
+    CREATE (i:Investigador {{
+      id: toInteger(row.id),
+      nombreCompleto: row.nombre_completo,
+      titulo: row.titulo_academico,
+      institucion: row.institucion,
+      correo: row.email
+    }});
+    """
+    with driver.session() as session:
+        result = session.run(query)
+    return result
+
+def cargar_proyectos_desde_csv(driver, csv_file_path):
+    uri_file_path = f"file:///{csv_file_path}"
+    query = f"""
+    LOAD CSV WITH HEADERS FROM '{uri_file_path}' AS row
+    CREATE (p:Proyecto {{
+      id: toInteger(row.idPry),
+      titulo: row.titulo_proyecto,
+      anno_inicio: toInteger(row.anno_inicio),
+      duracion_meses: toInteger(row.duracion_meses),
+      area_conocimiento: row.area_conocimiento
+    }});
+    """
+    with driver.session() as session:
+        result = session.run(query)
+    return result
+
+def cargar_publicaciones_desde_csv(driver, csv_file_path):
+    query = f"""
+    LOAD CSV WITH HEADERS FROM 'file:///{csv_file_path}' AS row
+    CREATE (pub:Publicacion {{
+      idPub: toInteger(row.idPub),
+      titulo: row.titulo_publicacion,
+      anno_publicacion: toInteger(row.anno_publicacion),
+      revista: row.nombre_revista
+    }});
+    """
+    summary = driver.execute_query(query)
+    return summary
+
+def crear_relaciones_publicaciones_proyectos(driver, csv_file_path):
+    query = f"""
+    LOAD CSV WITH HEADERS FROM 'file:///{csv_file_path}' AS row
+    MATCH (p:Proyecto {{id: toInteger(row.idProyecto)}})
+    MATCH (pub:Publicacion {{idPub: toInteger(row.idArt)}})
+    CREATE (p)-[:GENERA]->(pub);
+    """
+    summary = driver.execute_query(query)
+    return summary
+
+def crear_relaciones_investigadores_proyectos(driver, csv_file_path):
+    query = f"""
+    LOAD CSV WITH HEADERS FROM 'file:///{csv_file_path}' AS row
+    MATCH (i:Investigador {{id: toInteger(row.idInv)}})
+    MATCH (p:Proyecto {{id: toInteger(row.idProy)}})
+    CREATE (i)-[:PARTICIPA_EN]->(p);
+    """
+    summary = driver.execute_query(query)
+    return summary

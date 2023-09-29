@@ -1,7 +1,26 @@
 import streamlit as st
-from connection.connection import encontrarInvestigadores,encontrarInvestigador, crearInvestigador,asociarProyectoInvestigador,encontrarProyectos,encontrarProyecto,crearProyecto,modificarInvestigador,modificarProyecto,encontrarPublicaciones,encontrarPublicacion,crearPublicacion,modificarPublicacion,asociarProyectoPublicacion,encontrarAsociacionesPublicaciones,encontrarAsociacionesPublicaciones,encontrarInvestigadorRelacionado,encontrarProyectoRelacionado,definirProyectosRelacionadosPublicaciones
+from connection.connection import (encontrarInvestigadores,
+                                   encontrarInvestigador, 
+                                   crearInvestigador,
+                                   asociarProyectoInvestigador,
+                                   encontrarProyectos,encontrarProyecto,
+                                   crearProyecto,modificarInvestigador,
+                                   modificarProyecto,encontrarPublicaciones,
+                                   encontrarPublicacion,crearPublicacion,
+                                   modificarPublicacion,asociarProyectoPublicacion,
+                                   encontrarAsociacionesPublicaciones,
+                                   encontrarAsociacionesPublicaciones,
+                                   encontrarInvestigadorRelacionado,
+                                   encontrarProyectoRelacionado,
+                                   definirProyectosRelacionadosPublicaciones,
+                                   cargarArchivoInvestigadorCSV,
+                                   cargarArchivoProyectosCSV,
+                                   cargarArchivoPublicacionesCSV,
+                                   cargarArchivoRelacionesPublicacionYProyectoCSV,
+                                   cargarArchivoRelacionesInvestigadorYProyectoCSV)
 import pandas as pd
 import numpy as np
+import os
 
 ## Seleccion de pagina en sidebar de streamlit
 pagina = st.sidebar.radio("Pagina deseada:", ["Inicio", "Consultas","Carga de datos","Mantenimientos","Asociciones"])
@@ -176,11 +195,98 @@ if pagina == "Mantenimientos":
 
 
 if pagina == "Carga de datos":
-    st.title("Bienvenido a la seccion de carga de datos")
+    st.title("Bienvenido a la sección de carga de datos")
     st.image("https://static.vecteezy.com/system/resources/previews/002/846/729/non_2x/cloud-data-upload-vector.jpg")
+
+    # Definir los elementos para cargar archivos CSV
+    st.subheader("Carga de datos de Investigadores, Proyectos y Publicaciones")
     investigadores = st.file_uploader("Carga de archivos de Investigadores:")
     proyectos = st.file_uploader('Carga de archivos de Proyectos:')
     publicaciones = st.file_uploader('Carga de archivos de Publicaciones:')
+
+    # Carpeta de destino para guardar los archivos
+    destino = "C:\\Users\\Dell\\Documents\\AA_II_SEMESTRE_2023\\Bases\\proyecto1\\src\\archivos_guardados"
+    
+
+    # Función para cargar los datos y guardar los archivos en la ubicación deseada
+    def cargar_datos():
+        if investigadores:
+            try:
+                # Guardar el archivo de investigadores en la carpeta destino
+                investigadores_path = os.path.join(destino, "Investigadores.csv")
+                with open(investigadores_path, 'wb') as f:
+                    f.write(investigadores.read())
+
+                # Llamar a la función de carga y pasar la ruta del archivo
+                cargarArchivoInvestigadorCSV(investigadores_path)
+                st.success("Datos de Investigadores cargados exitosamente.")
+            except Exception as e:
+                st.error(f"Error al cargar datos de Investigadores: {str(e)}")
+
+        if proyectos:
+            try:
+                # Guardar el archivo de proyectos en la carpeta destino
+                proyectos_path = os.path.join(destino, "Proyectos.csv")
+                with open(proyectos_path, 'wb') as f:
+                    f.write(proyectos.read())
+
+                # Llamar a la función de carga y pasar la ruta del archivo
+                cargarArchivoProyectosCSV(proyectos_path)
+                st.success("Datos de Proyectos cargados exitosamente.")
+            except Exception as e:
+                st.error(f"Error al cargar datos de Proyectos: {str(e)}")
+
+        if publicaciones:
+            try:
+                # Guardar el archivo de publicaciones en la carpeta destino
+                publicaciones_path = os.path.join(destino, "Publicaciones.csv")
+                with open(publicaciones_path, 'wb') as f:
+                    f.write(publicaciones.read())
+
+                # Llamar a la función de carga y pasar la ruta del archivo
+                cargarArchivoPublicacionesCSV(publicaciones_path)
+                st.success("Datos de Publicaciones cargados exitosamente.")
+            except Exception as e:
+                st.error(f"Error al cargar datos de Publicaciones: {str(e)}")
+                
+    # Botón para cargar los datos
+    if st.button("Cargar Datos"):
+        cargar_datos()
+
+    st.subheader("Carga de datos de Relaciones")
+    relacionesInvestigadoresProyectos = st.file_uploader('Carga de archivos de relaciones Investigadores-Proyectos')
+    relacionesPublicacionProyecto = st.file_uploader('Carga de archivos de relaciones Publicacion-Proyecto')
+    
+    def cargar_relaciones():
+        if relacionesInvestigadoresProyectos:
+            try:
+                # Guardar el archivo de InvestigadoresProy en la carpeta destino
+                relacionesInvestigadoresProyectos_path = os.path.join(destino, "InvestigadoresProy.csv")
+                with open(relacionesInvestigadoresProyectos_path, 'wb') as f:
+                    f.write(relacionesInvestigadoresProyectos.read())
+
+                # Llamar a la función de carga y pasar la ruta del archivo
+                cargarArchivoRelacionesInvestigadorYProyectoCSV(relacionesInvestigadoresProyectos_path)
+                st.success("Datos de Relaciones Investigadores-Proyectos cargados exitosamente.")
+            except Exception as e:
+                st.error(f"Error al cargar datos de Publicaciones: {str(e)}")
+        
+        if relacionesPublicacionProyecto:
+            try:
+                # Guardar el archivo de PublicacionesProy en la carpeta destino
+                relacionesPublicacionProyecto_path = os.path.join(destino, "PublicacionesProy.csv")
+                with open(relacionesPublicacionProyecto_path, 'wb') as f:
+                    f.write(relacionesPublicacionProyecto.read())
+
+                # Llamar a la función de carga y pasar la ruta del archivo
+                cargarArchivoRelacionesPublicacionYProyectoCSV(relacionesPublicacionProyecto_path)
+                st.success("Datos de Relaciones Publicacion-Proyecto cargados exitosamente.")
+            except Exception as e:
+                st.error(f"Error al cargar datos de relaciones Publicacion-Proyecto: {str(e)}")
+
+    
+    if st.button("Cargar Datos Relaciones"):
+        cargar_relaciones()
 
 if pagina == "Asociciones":
     st.title("Asociaciones a la base de datos")
