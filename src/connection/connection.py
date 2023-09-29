@@ -1,7 +1,11 @@
 from neo4j import GraphDatabase
-from connection.requests.consults import crear_investigador,modificar_investigador, encontrar_investigador, encontrar_investigadores, asociar_proyecto_investigador,encontrar_proyecto,encontrar_proyectos,crear_proyecto
+## Imports de todas las funciones de consults.py
+from connection.requests.consults import crear_investigador,modificar_investigador, encontrar_investigador, encontrar_investigadores, asociar_proyecto_investigador,encontrar_proyecto,encontrar_proyectos,crear_proyecto,modificar_proyecto,modificar_publicacion, crear_publicacion, encontrar_publicacion, encontrar_publicaciones,asociar_proyecto_publicacion,encontrar_asociaciones_publicaciones,encontrar_investigador_relacionado,definir_proyectos_relacionados_publicaciones,encontrar_proyecto_relacionado
+## import de variables relativa, relacionadas a un .env 
 import os
 from dotenv import load_dotenv
+import neo4j
+##Llamada a las variables relativas 
 load_dotenv()
 url = os.getenv('URL')
 user = os.getenv('USER')
@@ -9,15 +13,24 @@ password = os.getenv('PASSWORD')
 AUTH = (user, password)
 
 
+# Configurador de la base de datos
 
 driver =  GraphDatabase.driver(url, auth=AUTH) 
 
+
+
+
+###FUNCIONES DE CONEXION 
+## SUS PARAMETROS SON IGUALES A LOS DE LAS FUNCIONES DE CONSULTS
+#SIRVEN PARA DIVIDIR LOS FICHEROS Y AUMENTAR LA COMPRESION
+#LA VARIABLE driver funciona como global para todas estas funciones
+# RETURNS: SON IGUALES A LOS DE LAS FUNCIONES DE CONSULTS O NULOS EN CASO DE NO SER NECESARIOS PARA EL CLIENTE
 def crearInvestigador(id,nombre,titulo,institucion,correo):
 
     summary = crear_investigador(driver,id,nombre,titulo,institucion,correo)
     return summary
 
-def modificar_investigador(idInvestigador,nombre,titulo,institucion,correo):
+def modificarInvestigador(idInvestigador,nombre,titulo,institucion,correo):
     results = modificar_investigador(driver,idInvestigador,nombre,titulo,institucion,correo)
     return results
 
@@ -43,4 +56,47 @@ def encontrarProyectos():
     return encontrar_proyectos(driver)
 
 def crearProyecto(idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion):
-    crear_proyecto(idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion)
+    crear_proyecto(driver,idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion)
+
+
+def modificarProyecto(idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion):
+    modificar_proyecto(driver,idProyecto,nombreProyecto,yearInicio,areaConocimiento,duracion)
+
+
+##PUBLICACIONES
+
+def modificarPublicacion(id,titulo,año_publicacion,revista):
+    modificar_publicacion(driver,id,titulo,año_publicacion,revista)
+
+
+def encontrarPublicacion(id):
+    return encontrar_publicacion(driver, id)
+
+def encontrarPublicaciones():
+    return encontrar_publicaciones(driver)
+
+
+def crearPublicacion(id,titulo,año_publicacion,revista):
+    crear_publicacion(driver,id,titulo,año_publicacion,revista)
+
+
+def asociarProyectoPublicacion(idProyecto,idPublicacion):
+    return asociar_proyecto_publicacion(driver,idProyecto,idPublicacion)
+    
+
+def encontrarAsociacionesPublicaciones():
+    return encontrar_asociaciones_publicaciones(driver)
+
+
+
+def encontrarInvestigadorRelacionado(idInvestigador):
+    return encontrar_investigador_relacionado(driver,idInvestigador)
+
+
+
+def encontrarProyectoRelacionado(id):
+    return encontrar_proyecto_relacionado(driver,id)
+
+
+def definirProyectosRelacionadosPublicaciones(id):
+    return definir_proyectos_relacionados_publicaciones(driver,id)
